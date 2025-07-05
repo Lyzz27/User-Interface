@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Agricultural System</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f7f8f6;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 230px;
+            height: 100vh;
+            background: #2e3d2f;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .sidebar .logo {
+            width: 40px;
+            height: 40px;
+            background: #b6e388;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .sidebar h2 {
+            font-size: 16px;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+
+        .sidebar button,
+        .sidebar .nav-item {
+            width: 150px;
+            margin: 6px 0;
+            padding: 10px 0;
+            background: #444e43;
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+            text-align: left;
+            padding-left: 20px;
+            transition: background 0.2s;
+        }
+
+        .sidebar .nav-item.active,
+        .sidebar button:hover {
+            background: #b6e388;
+            color: #222;
+        }
+
+        .main {
+            margin-left: 230px;
+            padding: 0 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0 10px 0;
+        }
+
+        .topbar .title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .topbar .actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .topbar .actions button {
+            margin-left: 10px;
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .topbar .actions .signup {
+            background: #222;
+            color: #fff;
+        }
+
+        .topbar .actions .login {
+            background: #fff;
+            color: #222;
+            border: 1px solid #222;
+        }
+
+        .topbar .actions .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f2f2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-left: 16px;
+            border: 1px solid #bbb;
+        }
+
+        .system-section {
+            margin-top: 10px;
+        }
+
+        .system-title {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .system-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: flex-start;
+            max-width: 100%;
+        }
+
+        .system-cards .card {
+            flex: 1 1 calc(33.333% - 24px);
+            min-width: 220px;
+            max-width: 340px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+
+        .card img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            display: block;
+        }
+
+        .card-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            color: #fff;
+            background: linear-gradient(0deg, rgba(34, 34, 34, 0.85) 90%, rgba(34, 34, 34, 0.1) 100%);
+            border-radius: 0 0 16px 16px;
+            position: static;
+            z-index: 2;
+            height: 100%;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        .switch {
+            position: static;
+            margin-left: 16px;
+            width: 52px;
+            height: 28px;
+            min-width: 90px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+            transition: box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .switch-status {
+            margin-left: 18px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #bdbdbd;
+            min-width: 28px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s;
+        }
+
+        .slider {
+            width: 44px;
+            height: 28px;
+            background: #ccc;
+            border-radius: 16px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+        }
+
+        .slider:before {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            width: 22px;
+            height: 22px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+            transition: 0.2s;
+        }
+
+        .switch input:checked+.slider:before {
+            left: 19px;
+            background: #fff;
+            box-shadow: 0 2px 8px #7ed95755;
+        }
+
+        .switch input:checked~.switch-status {
+            color: #7ed957;
+        }
+
+        .switch input:not(:checked)~.switch-status {
+            color: #bdbdbd;
+        }
+
+        .equipment-btn {
+            margin: 22px 0 10px 0;
+            padding: 10px 30px;
+            background: #c6e000;
+            color: #222;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .equipment-btn:hover {
+            background: #b6e388;
+        }
+
+        .drone-section {
+            margin-top: 10px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drone-header {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .drone-header .switch {
+            margin-left: 10px;
+        }
+
+        .drone-content {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .drone-info {
+            width: 200px;
+            background: #f7f8f6;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .drone-info .label {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .drone-info .value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .drone-status {
+            background: #eaf7d6;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 15px;
+            color: #3a5d1c;
+        }
+
+        .drone-route {
+            flex: 1;
+            background: #f7f8f6;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 0;
+        }
+
+        .route-map {
+            width: 100%;
+            height: 160px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .route-map svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .route-label {
+            position: absolute;
+            right: 20px;
+            bottom: 10px;
+            background: #fff;
+            color: #222;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .switch input[type="checkbox"] {
+            display: none;
+        }
+
+        /* Video playback modal styles */
+        .video-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .video-modal-content {
+            position: relative;
+            margin: 5% auto;
+            width: 80%;
+            max-width: 800px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .video-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: #2e3d2f;
+            color: #fff;
+        }
+
+        .video-title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .video-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .video-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            background: #000;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(45deg, #2e3d2f, #b6e388);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .system-cards .card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .system-cards .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        /* 3D Drone Container Styles */
+        #drone3d-container {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        #drone3d-container canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        #drone-info-overlay {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #drone-info-overlay div {
+            margin: 2px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        #drone-info-overlay span {
+            font-weight: bold;
+            color: #2e3d2f;
+        }
+
+        #reset-camera {
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	    position: absolute;
+                   }
+
+        
+        @media (max-width: 1100px) {
+            .system-cards {
+                flex-direction: column;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+            }
+
+            .video-modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+
+            .drone-content {
+                flex-direction: column;
+            }
+
+            .drone-info {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            #drone3d-container {
+                height: 250px !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #drone3d-container {
+                height: 200px !important;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .system-cards .card {
+                flex: 1 1 calc(50% - 24px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .system-cards .card {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- sidebar -->
+    <div class="sidebar">
+        <div class="logo">🌱</div>
+        <h2>Intelligent Agricultural System</h2>
+        <div class="nav-item">Home</div>
+        <div class="nav-item">Crops & Field Management</div>
+        <div class="nav-item">Real-time Data</div>
+        <div class="nav-item active">IoT & Equipment</div>
+        <div class="nav-item">Historical Data</div>
+        <div class="nav-item">Crop Recommendation</div>
+        <div class="nav-item">Market Insight</div>
+        <div class="nav-item">Supply Chain & Logistics</div>
+        <div class="nav-item">Sustainability Tracker</div>
+        <div class="nav-item">Content Sharing</div>
+        <div class="nav-item">User Guide</div>
+    </div>
+    <!-- Main content -->
+    <div class="main">
+        <div class="main-section main-page" style="display:block;">
+            <div class="topbar">
+                <div class="title">Intelligent Agricultural System</div>
+                <div class="actions">
+                    <button class="signup">SIGN UP</button>
+                    <button class="login">LOG IN</button>
+                    <div class="avatar">&#128100;</div>
+                </div>
+            </div>
+            <div class="system-section">
+                <div class="system-title">System</div>
+                <div class="system-cards">
+                    <div class="card monitoring-card video-card">
+                        <img src="images/monitoring.jpg" alt="Monitoring System">
+                        <div class="card-content">
+                            <span class="card-title">Monitoring System</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                                <span class="switch-status">ON</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card video-card">
+                        <img src="images/planting.jpg" alt="Planting Machine">
+                        <div class="card-content">
+                            <span class="card-title">Planting Machine</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                                <span class="switch-status">OFF</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card video-card">
+                        <img src="images/irrigation.jpg" alt="Irrigation System">
+                        <div class="card-content">
+                            <span class="card-title">Irrigation System</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                                <span class="switch-status">OFF</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card video-card">
+                        <img src="images/spraying.jpg" alt="Spraying Robot">
+                        <div class="card-content">
+                            <span class="card-title">Spraying Robot</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                                <span class="switch-status">ON</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card video-card">
+                        <img src="images/tractor.jpg" alt="Automated Tractor">
+                        <div class="card-content">
+                            <span class="card-title">Automated Tractor</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                                <span class="switch-status">OFF</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card video-card">
+                        <img src="images/drone.jpg" alt="Drone">
+                        <div class="card-content">
+                            <span class="card-title">Drone</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                                <span class="switch-status">ON</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <button class="equipment-btn">Equipment Maintenance</button>
+            </div>
+            <div class="drone-section">
+                <div class="drone-header">
+                    Drone
+                    <label class="switch" style="margin-left:10px;">
+                        <input type="checkbox" id="drone-rotate-switch" checked>
+                        <span class="slider"></span>
+                        <span class="switch-status">ON</span>
+                    </label>
+                </div>
+                <div class="drone-content">
+                    <div class="drone-route">
+                        <div style="font-size:15px; color:#888;">Flight Route</div>
+
+                        <div style="display: flex; gap: 28px; margin-top: 18px; align-items: flex-start;width: 100%;">
+                            <!-- A new 3D drone container has been added -->
+                            <div id="route-drone3d"
+                                style="width:500px;height:488px;background:#e0e0e0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            </div>
+				<button id="reset-camera" >Reset View</button>
+
+                            <!-- The original SVG route control panel -->
+                            <div style="flex:1;display:flex;flex-direction:column;gap:12px;min-width:260px;">
+                                <!-- Path Status -->
+                                <div
+                                    style="background:#fff;border-radius:10px;padding:15px 18px;box-shadow:0 2px 4px rgba(0,0,0,0.08);margin-bottom:0;">
+                                    <div style="font-size:15px;font-weight:500;margin-bottom:10px;color:#333;">Route
+                                        Status</div>
+                                    <div
+                                        style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                        <span style="font-size:13px;color:#666;">Current Route:</span>
+                                        <span style="font-size:13px;font-weight:500;color:#2e3d2f;">Field Survey
+                                            Route</span>
+                                    </div>
+                                    <div
+                                        style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                        <span style="font-size:13px;color:#666;">Progress:</span>
+                                        <span id="route-progress"
+                                            style="font-size:13px;font-weight:500;color:#b6e388;">0%</span>
+                                    </div>
+                                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                                        <span style="font-size:13px;color:#666;">Waypoints:</span>
+                                        <span id="route-waypoints"
+                                            style="font-size:13px;font-weight:500;color:#2e3d2f;">0/6</span>
+                                    </div>
+                                </div>
+
+                                <!-- Path Control -->
+                                <div
+                                    style="background:#fff;border-radius:10px;padding:15px 18px;box-shadow:0 2px 4px rgba(0,0,0,0.08);margin-bottom:0;">
+                                    <div style="font-size:15px;font-weight:500;margin-bottom:10px;color:#333;">Route
+                                        Control</div>
+                                    <div style="display:flex;gap:12px;">
+                                        <button id="start-route"
+                                            style="flex:1;padding:10px 0;background:#b6e388;color:#222;border:none;border-radius:6px;font-size:15px;cursor:pointer;font-weight:500;">Start</button>
+                                        <button id="stop-route"
+                                            style="flex:1;padding:10px 0;background:#ff6b6b;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer;font-weight:500;">Stop</button>
+                                    </div>
+                                </div>
+
+                                <!-- Real-time Trajectory -->
+                                <div
+                                    style="background:#fff;border-radius:10px;padding:15px 18px;box-shadow:0 2px 4px rgba(0,0,0,0.08);margin-bottom:0;">
+                                    <div style="font-size:15px;font-weight:500;margin-bottom:10px;color:#333;">Flight
+                                        Path</div>
+                                    <div id="flight-path-canvas"
+                                        style="width:100%;height:180px;background:#f5f5f5;border-radius:6px;position:relative;overflow:hidden;">
+                                        <div
+                                            style="width:100%;background:#e0e0e0;border-radius:8px;margin-top:18px;overflow:auto;">
+                                            <svg id="flight-svg" width="600" height="150" viewBox="0 0 600 300"
+                                                style="display:block;margin:auto;">
+                                                <!-- Route Twist -->
+                                                <polyline id="route-polyline"
+                                                    points="50,250 150,120 250,180 350,80 500,200 570,60"
+                                                    style="fill:none;stroke:#3a5d1c;stroke-width:5" />
+                                                <!-- The current position of the drone is a green dot -->
+                                                <circle id="drone-position" cx="50" cy="250" r="16" fill="#7ed957"
+                                                    stroke="#3a5d1c" stroke-width="4" />
+                                                <!-- Current point annotation -->
+                                                <text id="location-text" x="50" y="95" font-size="16"
+                                                    fill="#222">Current Location</text>
+                                                <!-- Dynamic coordinate annotation -->
+                                                <text id="drone-coord" x="50" y="50" font-size="15" fill="#1a5d1c"
+                                                    font-family="monospace">(0, 0)</text>
+                                            </svg>
+                                        </div>
+                                        <div
+                                            style="position:absolute;top:5px;right:5px;background:rgba(255,255,255,0.9);padding:2px 6px;border-radius:4px;font-size:11px;color:#666;">
+                                            Live
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-section equipment-page" style="display:none;">
+            <div class="topbar">
+                <div class="title">Intelligent Agricultural System</div>
+                <div class="actions">
+                    <button class="signup">SIGN UP</button>
+                    <button class="login">LOG IN</button>
+                    <div class="avatar">&#128100;</div>
+                </div>
+            </div>
+            <div class="system-section"
+                style="max-width:700px;margin:30px auto;background:#fff;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);padding:30px 40px 30px 40px;">
+                <div class="system-title" style="text-align:center;">Equipment Maintenance</div>
+                <div style="margin-bottom:20px;">
+                    <div style="display:flex;align-items:center;margin-bottom:10px;">
+                        <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=80&q=80"
+                            style="width:60px;height:40px;border-radius:8px;margin-right:10px;">
+                        <div>
+                            Planting Machine<br>Equipment Status: 9.0<br>Safeguard: 2<br><span style="color:#b6a000;">●
+                                To Be Maintained</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;margin-bottom:10px;">
+                        <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=80&q=80"
+                            style="width:60px;height:40px;border-radius:8px;margin-right:10px;">
+                        <div>
+                            Irrigation System<br>Equipment Status: 9.0<br>Safeguard: 2<br><span style="color:#b6a000;">●
+                                To Be Maintained</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;margin-bottom:10px;">
+                        <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=80&q=80"
+                            style="width:60px;height:40px;border-radius:8px;margin-right:10px;">
+                        <div>
+                            Spraying Robot<br>Equipment Status: 9.0<br>Safeguard: 2<br><span style="color:#b6a000;">● To
+                                Be Maintained</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;margin-bottom:10px;">
+                        <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=80&q=80"
+                            style="width:60px;height:40px;border-radius:8px;margin-right:10px;">
+                        <div>
+                            Automatic Tractor<br>Equipment Status: 9.0<br>Safeguard: 2<br><span style="color:#3a5d1c;">●
+                                Maintained</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;margin-bottom:10px;">
+                        <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3fdc?auto=format&fit=crop&w=80&q=80"
+                            style="width:60px;height:40px;border-radius:8px;margin-right:10px;">
+                        <div>
+                            Drone<br>Equipment Status: 9.0<br>Safeguard: 2<br><span style="color:#3a5d1c;">●
+                                Maintained</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-bottom:10px;">Drone Equipment Status: <b>8.0</b></div>
+                <div style="margin-bottom:10px;">Maintenance Plan<br>Maintenance and Cleaning Cycle: 1 Time/3
+                    Months<br>Inspection Cycle: 1 Time/6 Months</div>
+                <div style="margin-bottom:10px;">Maintenance Data<br>Number of Maintenance Operations: 3<br>Number of
+                    Failures: 2</div>
+                <div style="margin-bottom:10px;">Repair History<br>- Abnormal Temperature 2025.04.10<br>- Replace the
+                    Wind Blade of the Drone 2024.04.10</div>
+                <button class="return-btn"
+                    style="margin:20px auto 0 auto;display:block;padding:10px 40px;background:#c6e000;color:#222;border:none;border-radius:8px;font-size:16px;">Return</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video playback mode box -->
+    <div id="videoModal" class="video-modal">
+        <div class="video-modal-content">
+            <div class="video-header">
+                <div class="video-title">Monitoring System Demo Video</div>
+                <button class="video-close" id="videoClose">&times;</button>
+            </div>
+            <div class="video-container">
+                <video id="monitoringVideo" controls>
+                    <source src="monitoring_demo.mp4" type="video/mp4">
+                    <source src="monitoring_demo.webm" type="video/webm">
+                    Your browser does not support video playback.
+                </video>
+                <div class="video-placeholder" id="videoPlaceholder">
+                    <div>
+                        <div style="font-size: 24px; margin-bottom: 10px;">📹</div>
+                        <div>Monitoring System Demo Video</div>
+                        <div style="font-size: 14px; margin-top: 10px; opacity: 0.8;">Click play button to start
+                            watching</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- A second confirmation pop-up window -->
+    <div id="confirmModal"
+        style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);align-items:center;justify-content:center;">
+        <div
+            style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.18);width:340px;max-width:90vw;">
+            <div
+                style="background:#eab308;padding:14px 18px;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-weight:bold;">Monitoring System</span>
+                <button id="confirmModalClose"
+                    style="background:none;border:none;font-size:20px;cursor:pointer;">×</button>
+            </div>
+            <div style="padding:24px 18px 18px 18px;display:flex;align-items:center;">
+                <span style="font-size:28px;color:#eab308;margin-right:14px;">&#8505;</span>
+                <span id="confirmModalText" style="font-size:16px;color:#222;">Are you sure you want to switch?</span>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:10px;padding:0 18px 18px 18px;">
+                <button id="confirmModalNo"
+                    style="padding:6px 18px;border-radius:6px;border:1px solid #bbb;background:#fff;cursor:pointer;">No</button>
+                <button id="confirmModalYes"
+                    style="padding:6px 18px;border-radius:6px;border:none;background:#eab308;color:#fff;cursor:pointer;">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Local three.js -->
+    <script src="lib/three.min.js"></script>
+    <!-- Event binding  js -->
+    <script src="system.js"></script>
+    
+    <script>
+        // 3D Drone Model with Flight Route Animation
+        window.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('route-drone3d');
+            if (!container) return;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+            camera.position.set(0, 3, 7);
+            camera.lookAt(0, 0, 0);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            // Enable shadow
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // Ambient light
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+
+            // Parallel light used to create shadows
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 20, 10);
+            directionalLight.castShadow = true;
+            // Improve shadow resolution
+            directionalLight.shadow.mapSize.width = 4096;
+            directionalLight.shadow.mapSize.height = 4096;
+            // Adjust the parameters of the shadow camera
+            directionalLight.shadow.camera.left = -20;
+            directionalLight.shadow.camera.right = 20;
+            directionalLight.shadow.camera.top = 20;
+            directionalLight.shadow.camera.bottom = -20;
+            directionalLight.shadow.camera.near = 0.1;
+            directionalLight.shadow.camera.far = 50;
+            scene.add(directionalLight);
+
+            // Create a simple drone model
+            function createDroneModel() {
+                const droneGroup = new THREE.Group();
+                const bodyGeometry = new THREE.BoxGeometry(1.5, 0.7, 1.5);
+                const bodyMaterial = new THREE.MeshPhongMaterial({ color: 0x3498db, shininess: 80 });
+                const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+                body.position.y = 0.2;
+                // Set the fuselage projection shadow
+                body.castShadow = true; 
+                droneGroup.add(body);
+
+                const armGeometry = new THREE.BoxGeometry(0.1, 0.1, 1.8);
+                const armMaterial = new THREE.MeshPhongMaterial({ color: 0x2c3e50 });
+                const armPositions = [
+                    { x: 0.75, y: 0.2, z: 0, rotation: Math.PI / 4 },
+                    { x: -0.75, y: 0.2, z: 0, rotation: -Math.PI / 4 },
+                    { x: 0, y: 0.2, z: 0.75, rotation: 0 },
+                    { x: 0, y: 0.2, z: -0.75, rotation: Math.PI / 2 }
+                ];
+                armPositions.forEach(pos => {
+                    const arm = new THREE.Mesh(armGeometry, armMaterial);
+                    arm.position.set(pos.x, pos.y, pos.z);
+                    arm.rotation.y = pos.rotation;
+                    // Set the arm projection shadow
+                    arm.castShadow = true; 
+                    droneGroup.add(arm);
+                });
+
+                const propellerGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.05, 16);
+                const propellerMaterial = new THREE.MeshPhongMaterial({ color: 0x2ecc71, shininess: 60 });
+                const propellerPositions = [
+                    { x: 1.1, y: 0.3, z: 1.1 },
+                    { x: -1.1, y: 0.3, z: 1.1 },
+                    { x: 1.1, y: 0.3, z: -1.1 },
+                    { x: -1.1, y: 0.3, z: -1.1 }
+                ];
+                propellerPositions.forEach(pos => {
+                    const propeller = new THREE.Mesh(propellerGeometry, propellerMaterial);
+                    propeller.position.set(pos.x, pos.y, pos.z);
+                    // Set the propeller to cast a shadow
+                    propeller.castShadow = true; 
+                    propeller.userData.isPropeller = true;
+                    droneGroup.add(propeller);
+                });
+
+  	  // Add the camera module
+	const cameraGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+   	const cameraMaterial = new THREE.MeshPhongMaterial({ color: 0x1a1a1a });
+    	const cameraModule = new THREE.Mesh(cameraGeometry, cameraMaterial);
+    	cameraModule.position.set(0.7, 0.2, 0);
+   	body.add(cameraModule);
+    
+   	 // Add Footage to Comp
+ 	const lensGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.1, 16);
+   	const lensMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+    	const lens = new THREE.Mesh(lensGeometry, lensMaterial);
+    	lens.position.set(0.85, 0.2, 0);
+    	lens.rotation.z = Math.PI/2;
+    	body.add(lens);
+
+                return droneGroup;
+            }
+
+            // Create a drone model and add it to the scene
+            const drone = createDroneModel();
+            scene.add(drone);
+
+            // Create a plane to receive shadows
+            const planeGeometry = new THREE.PlaneGeometry(50, 50);
+            const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc });
+            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+            plane.rotation.x = -Math.PI / 2;
+            plane.position.y = -1;
+            // Enable shadow reception on the plane
+            plane.receiveShadow = true;
+            scene.add(plane);
+
+            // Listen for mouse action events
+            let isMouseDown = false;
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetRotationX = Math.PI / 6;
+            let targetRotationY = Math.PI / 4;
+            let currentRotationX = Math.PI;
+            let currentRotationY = Math.PI / 4;
+
+            let distance = 10;
+            const minDistance = 8;
+            const maxDistance = 50;
+
+            // Press the mouse, ready to drag
+            container.addEventListener('mousedown', function (event) {
+                isMouseDown = true;
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            });
+
+            // When the mouse moves and remains pressed, operations such as dragging and rotating are performed
+            container.addEventListener('mousemove', function (event) {
+                if (isMouseDown) {
+                    const deltaX = event.clientX - mouseX;
+                    const deltaY = event.clientY - mouseY;
+
+                    targetRotationY += deltaX * 0.01;
+                    targetRotationX += deltaY * 0.01;
+
+                    targetRotationX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, targetRotationX));
+
+                    mouseX = event.clientX;
+                    mouseY = event.clientY;
+                }
+            });
+
+            // Release the mouse and end the dragging
+            container.addEventListener('mouseup', function () {
+                isMouseDown = false;
+            });
+
+            // When the mouse moves out of the area, dragging also ends
+            container.addEventListener('mouseleave', function () {
+                isMouseDown = false;
+            });
+
+
+            // Update drone info display
+            function updateDroneInfo(position) {
+                const pos = document.getElementById('drone-position');
+                const speed = document.getElementById('drone-speed');
+                const alt = document.getElementById('drone-altitude');
+                if (pos) pos.textContent = `(${position.x.toFixed(1)}, ${position.y.toFixed(1)}, ${position.z.toFixed(1)})`;
+                if (speed) speed.textContent = '2.5 m/s';
+                if (alt) alt.textContent = `${position.y.toFixed(1)} m`;
+            }
+
+	 // Reset Camera button
+        document.getElementById('reset-camera').addEventListener('click', function() {
+            targetRotationX = Math.PI / 6;
+            targetRotationY = Math.PI / 4;
+            distance = 10;
+        });
+
+
+            // Declaration of flight route variables and functions
+            let isRouteActive = false;
+            let routeProgress = 0;
+            let waypoints = [
+                { x: 50, y: 250 },
+                { x: 150, y: 120 },
+                { x: 250, y: 180 },
+                { x: 350, y: 80 },
+                { x: 500, y: 200 },
+                { x: 570, y: 60 }
+            ];
+            let currentWaypoint = 0;
+            let currentPosition = { x: 50, y: 250 };
+            const flightSvg = document.getElementById('flight-svg');
+            const dronePosition = document.getElementById('drone-position');
+            const locationText = document.getElementById('location-text');
+            const droneCoord = document.getElementById('drone-coord');
+
+            function updateDronePosition(x, y) {
+                // Update the position circle of the drone
+                dronePosition.setAttribute('cx', x);
+                dronePosition.setAttribute('cy', y);
+
+                // Update location text
+                locationText.setAttribute('x', x);
+                locationText.setAttribute('y', y + 35);
+
+                // Update coordinate display
+                droneCoord.setAttribute('x', x);
+                droneCoord.setAttribute('y', y - 10);
+                droneCoord.textContent = `(${Math.round(x)}, ${Math.round(y)})`;
+
+                // Update the current position
+                currentPosition = { x, y };
+            }
+
+            function updateRouteStatus() {
+                const progress = waypoints.length > 0 ? Math.round((currentWaypoint / waypoints.length) * 100) : 0;
+                const progressElement = document.getElementById('route-progress');
+                const waypointsElement = document.getElementById('route-waypoints');
+
+                if (progressElement) {
+                    progressElement.textContent = progress + '%';
+                }
+                if (waypointsElement) {
+                    waypointsElement.textContent = currentWaypoint + '/' + waypoints.length;
+                }
+            }
+
+            // Event binding
+            document.getElementById('start-route').addEventListener('click', function () {
+                isRouteActive = true;
+                this.style.background = '#4CAF50';
+                this.textContent = 'Running';
+                updateRouteStatus();
+            });
+
+            document.getElementById('stop-route').addEventListener('click', function () {
+                isRouteActive = false;
+                routeProgress = 0;
+                currentWaypoint = 0;
+                currentPosition = { x: 50, y: 250 };
+                document.getElementById('start-route').style.background = '#b6e388';
+                document.getElementById('start-route').textContent = 'Start';
+                updateRouteStatus();
+                updateDronePosition(50, 250);
+            });
+
+            // Initialize the SVG roadmap
+            function initializeFlightPath() {
+                // Construct the "points" string for route brokenlines
+                const pointsString = waypoints.map(wp => `${wp.x},${wp.y}`).join(' ');
+                const routePolyline = document.getElementById('route-polyline');
+                if (routePolyline) {
+                    routePolyline.setAttribute('points', pointsString);
+                }
+
+                // Set the initial position
+                updateDronePosition(50, 250);
+
+                // Initialize Route Status
+                updateRouteStatus();
+            }
+
+            // Initialize after the page is loaded
+            initializeFlightPath();
+
+            // Animation functions and initialization
+            function animate() {
+                requestAnimationFrame(animate);
+                // Smooth camera rotation
+                currentRotationX += (targetRotationX - currentRotationX) * 0.05;
+                currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+                camera.position.x = distance * Math.sin(currentRotationY) * Math.cos(currentRotationX);
+                camera.position.y = distance * Math.sin(currentRotationX);
+                camera.position.z = distance * Math.cos(currentRotationY) * Math.cos(currentRotationX);
+                camera.lookAt(0, 0, 0);
+
+                // Route flight logic - Only update path points, do not move the 3D model
+                if (isRouteActive && waypoints.length > 0) {
+                    //  Calculate the virtual flight position (for path drawing)
+                    const targetWaypoint = waypoints[currentWaypoint];
+                    const virtualPos = {
+                        x: currentPosition.x,
+                        y: currentPosition.y
+                    };
+
+                    const distanceToTarget = Math.sqrt(
+                        Math.pow(targetWaypoint.x - virtualPos.x, 2) +
+                        Math.pow(targetWaypoint.y - virtualPos.y, 2)
+                    );
+
+                    if (distanceToTarget < 5) {
+                        // Reach the current waypoint and move to the next one
+                        currentWaypoint = (currentWaypoint + 1) % waypoints.length;
+                        routeProgress = (currentWaypoint / waypoints.length) * 100;
+                        updateRouteStatus();
+
+                        // If you complete one lap, reset to the starting point
+                        if (currentWaypoint === 0) {
+                            currentPosition = { x: waypoints[0].x, y: waypoints[0].y };
+                            updateDronePosition(currentPosition.x, currentPosition.y);
+                        }
+                    } else {
+                        const direction = {
+                            x: (targetWaypoint.x - virtualPos.x) / distanceToTarget,
+                            y: (targetWaypoint.y - virtualPos.y) / distanceToTarget
+                        };
+                        const speed = 2;
+                        const newPos = {
+                            x: virtualPos.x + direction.x * speed,
+                            y: virtualPos.y + direction.y * speed
+                        };
+                        updateDronePosition(newPos.x, newPos.y);
+                    }
+                }
+
+                // The 3D model keeps rotating in place and does not follow the flight path
+                if (drone) {
+                    // Keep the model in the center position and move it slightly down
+                    drone.position.set(0, 2, 0);
+                    // Rotate only when “shouldRotateDrone” is true.
+                    let shouldRotateDrone = true;
+                    // Monitor the rotation switch of the Drone
+                    const droneRotateSwitch = document.getElementById('drone-rotate-switch');
+                    if (droneRotateSwitch) {
+                        shouldRotateDrone = droneRotateSwitch.checked;
+                        droneRotateSwitch.addEventListener('change', function () {
+                            shouldRotateDrone = this.checked;
+                        });
+                    }
+                    if (shouldRotateDrone) {
+                        drone.rotation.y += 0.005;
+                        // Propeller rotation
+                        drone.traverse(function (child) {
+                            if (child.isMesh && child.userData && child.userData.isPropeller) {
+                                child.rotation.y += 0.3;
+                            }
+                        });
+                    }
+                }
+
+                if (drone) {
+                    updateDroneInfo(drone.position);
+                }
+
+                renderer.render(scene, camera);
+            }
+            animate();
+        });
+    </script>
+
+</body>
+
+</html>
